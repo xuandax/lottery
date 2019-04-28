@@ -1,5 +1,21 @@
 package main
 
+import (
+	"fmt"
+	"github.com/xuanxiaox/lottery/bootstrap"
+	"github.com/xuanxiaox/lottery/web/routes"
+)
+
+var port = 8888
+
+func newApp() *bootstrap.Bootstrapper {
+	app := bootstrap.New("Go抽奖系统", "xuanxiaox")
+	app.Bootstrap()
+	app.Configure(routes.Configure)
+	return app
+}
+
 func main() {
-	msql := "root:root@tcp(127.0.0.1:3306)/lottery?charset=utf8"
+	app := newApp()
+	app.Listen(fmt.Sprintf(":%d", port))
 }

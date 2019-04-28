@@ -5,20 +5,20 @@ import (
 	"github.com/xuanxiaox/lottery/models"
 )
 
-type BlackipDao struct {
+type UserDao struct {
 	engine *xorm.Engine
 }
 
-//创建BlackipDao
-func NewBlackipDao(engine *xorm.Engine) *BlackipDao {
-	return &BlackipDao{
+//创建UserDao
+func NewUserDao(engine *xorm.Engine) *UserDao {
+	return &UserDao{
 		engine: engine,
 	}
 }
 
 //根据ID获取数据
-func (d *BlackipDao) Get(id int) *models.LtBlackip {
-	data := &models.LtBlackip{Id: id}
+func (d *UserDao) Get(id int) *models.LtUser {
+	data := &models.LtUser{Id: id}
 	ok, err := d.engine.Get(data)
 	if ok && err == nil {
 		return data
@@ -28,16 +28,16 @@ func (d *BlackipDao) Get(id int) *models.LtBlackip {
 }
 
 //获取所有数据
-func (d *BlackipDao) GetAll(page, size int) []models.LtBlackip {
-	dataList := make([]models.LtBlackip, 0)
+func (d *UserDao) GetAll(page, size int) []models.LtUser {
+	dataList := make([]models.LtUser, 0)
 	offset := (page - 1) * size
 	_ = d.engine.Desc("id").Limit(size, offset).Find(&dataList)
 	return dataList
 }
 
 //获取总数
-func (d *BlackipDao) CountAll() int64 {
-	num, err := d.engine.Count(&models.LtBlackip{})
+func (d *UserDao) CountAll() int64 {
+	num, err := d.engine.Count(&models.LtUser{})
 	if err != nil {
 		return 0
 	}
@@ -45,27 +45,27 @@ func (d *BlackipDao) CountAll() int64 {
 }
 
 //软删除
-//func(d *BlackipDao) Delete(id int) error {
-//	data := models.LtBlackip{Id:id, SysStatus:1}
+//func(d *UserDao) Delete(id int) error {
+//	data := models.LtUser{Id:id, SysStatus:1}
 //	_, err := d.engine.Id(data.Id).Update(data)
 //	return err
 //}
 
 //更新
-func (d *BlackipDao) Update(data *models.LtBlackip, colums []string) error {
+func (d *UserDao) Update(data *models.LtUser, colums []string) error {
 	_, err := d.engine.Id(data.Id).Cols(colums...).Update(data)
 	return err
 }
 
 //创建
-func (d *BlackipDao) Create(data *models.LtBlackip) error {
+func (d *UserDao) Create(data *models.LtUser) error {
 	_, err := d.engine.Insert(data)
 	return err
 }
 
 //根据IP查询
-func (d *BlackipDao) GetByIp(ip string) []*models.LtBlackip {
-	dataList := make([]*models.LtBlackip, 0)
+func (d *UserDao) GetByIp(ip string) []*models.LtUser {
+	dataList := make([]*models.LtUser, 0)
 	err := d.engine.Where("ip = ?", ip).Desc("ip").Find(&dataList)
 	if err != nil || len(dataList) < 1 {
 		return nil

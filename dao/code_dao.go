@@ -10,7 +10,7 @@ type CodeDao struct {
 }
 
 //创建CodeDao
-func newCodeDao(engine *xorm.Engine) *CodeDao {
+func NewCodeDao(engine *xorm.Engine) *CodeDao {
 	return &CodeDao{
 		engine: engine,
 	}
@@ -28,9 +28,10 @@ func (d *CodeDao) Get(id int) *models.LtCode {
 }
 
 //获取所有数据
-func (d *CodeDao) GetAll() []*models.LtCode {
-	dataList := make([]*models.LtCode, 0)
-	_ := d.engine.Asc("id").Find(&dataList)
+func (d *CodeDao) GetAll(page, size int) []models.LtCode {
+	dataList := make([]models.LtCode, 0)
+	start := (page - 1) * size
+	_ = d.engine.Asc("id").Limit(size, start).Find(&dataList)
 	return dataList
 }
 
@@ -60,4 +61,19 @@ func (d *CodeDao) Update(data *models.LtCode, colums []string) error {
 func (d *CodeDao) Create(data *models.LtCode) error {
 	_, err := d.engine.Insert(data)
 	return err
+}
+
+//根据gift_id获取数据
+func (d *CodeDao) GetByGiftId(giftId int) []models.LtCode {
+	dataList := make([]models.LtCode, 0)
+	_ = d.engine.Where("gift_id=?", giftId).Desc("id").Find(&dataList)
+	return dataList
+}
+
+func (d *CodeDao) CountByGiftId(giftId int) int64 {
+	count, err := d.engine.Where("gift_id=?", giftId).Count()
+	if err != nil {
+		return 0
+	}
+	return count
 }

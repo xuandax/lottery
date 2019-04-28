@@ -10,7 +10,7 @@ type ResultDao struct {
 }
 
 //创建ResultDao
-func newResultDao(engine *xorm.Engine) *ResultDao {
+func NewResultDao(engine *xorm.Engine) *ResultDao {
 	return &ResultDao{
 		engine: engine,
 	}
@@ -28,9 +28,10 @@ func (d *ResultDao) Get(id int) *models.LtResult {
 }
 
 //获取所有数据
-func (d *ResultDao) GetAll() []*models.LtResult {
-	dataList := make([]*models.LtResult, 0)
-	_ := d.engine.Desc("id").Find(&dataList)
+func (d *ResultDao) GetAll(page, size int) []models.LtResult {
+	dataList := make([]models.LtResult, 0)
+	offset := (page - 1) * size
+	_ = d.engine.Desc("id").Limit(size, offset).Find(&dataList)
 	return dataList
 }
 
@@ -44,11 +45,11 @@ func (d *ResultDao) CountAll() int64 {
 }
 
 //软删除
-//func(d *ResultDao) Delete(id int) error {
-//	data := models.LtResult{Id:id, SysStatus:1}
-//	_, err := d.engine.Id(data.Id).Update(data)
-//	return err
-//}
+func (d *ResultDao) Delete(id int) error {
+	data := models.LtResult{Id: id, SysStatus: 1}
+	_, err := d.engine.Id(data.Id).Update(data)
+	return err
+}
 
 //更新
 func (d *ResultDao) Update(data *models.LtResult, colums []string) error {
@@ -70,4 +71,18 @@ func (d *ResultDao) GetByIp(ip string) []*models.LtResult {
 		return nil
 	}
 	return dataList
+}
+
+func (d *ResultDao) GetByGiftId(giftId int) []models.LtResult {
+	dataList := make([]models.LtResult, 0)
+	_ = d.engine.Desc("id").Where("gift_id = ?", giftId).Find(&dataList)
+	return dataList
+}
+
+func (d *ResultDao) CountByGiftId(giftId int) int64 {
+	count, err := d.engine.Where("gift_id = ?", giftId).Count()
+	if err != nil {
+		count = 0
+	}
+	return count
 }

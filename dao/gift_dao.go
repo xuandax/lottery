@@ -10,7 +10,7 @@ type GiftDao struct {
 }
 
 //创建GiftDao
-func newGiftDao(engine *xorm.Engine) *GiftDao {
+func NewGiftDao(engine *xorm.Engine) *GiftDao {
 	return &GiftDao{
 		engine: engine,
 	}
@@ -28,9 +28,9 @@ func (d *GiftDao) Get(id int) *models.LtGift {
 }
 
 //获取所有数据
-func (d *GiftDao) GetAll() []*models.LtGift {
-	dataList := make([]*models.LtGift, 0)
-	_ := d.engine.Asc("sys_status").Asc("prize_order").Find(&dataList)
+func (d *GiftDao) GetAll() []models.LtGift {
+	dataList := make([]models.LtGift, 0)
+	_ = d.engine.Asc("sys_status").Asc("prize_order").Find(&dataList)
 	return dataList
 }
 
