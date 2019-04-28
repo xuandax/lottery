@@ -47,6 +47,7 @@ func (c *AdminUserController) Get() mvc.Result {
 			"Total":    total,
 			"PagePrev": pagePrev,
 			"PageNext": pageNext,
+			"Now":      comm.NowUnix(),
 		},
 	}
 }

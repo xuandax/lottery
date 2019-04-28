@@ -38,7 +38,7 @@ func (c *AdminBlackipController) Get() mvc.Result {
 	}
 
 	return mvc.View{
-		Name:   "admin/user.html",
+		Name:   "admin/blackip.html",
 		Layout: "admin/layout.html",
 		Data: iris.Map{
 			"Title":    "后台管理",
@@ -47,6 +47,7 @@ func (c *AdminBlackipController) Get() mvc.Result {
 			"Total":    total,
 			"PagePrev": pagePrev,
 			"PageNext": pageNext,
+			"Now":      comm.NowUnix(),
 		},
 	}
 }
