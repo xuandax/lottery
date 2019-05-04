@@ -15,6 +15,7 @@ type CodeService interface {
 	Update(data *models.LtCode, columns []string) error
 	GetByGiftId(giftId int) []models.LtCode
 	CountByGiftId(giftId int) int64
+	NextUsingCode(giftId, codeId int) *models.LtCode
 }
 
 type codeService struct {
@@ -50,4 +51,8 @@ func (s *codeService) GetByGiftId(giftId int) []models.LtCode {
 }
 func (s *codeService) CountByGiftId(giftId int) int64 {
 	return s.dao.CountByGiftId(giftId)
+}
+
+func (s *codeService) NextUsingCode(giftId, codeId int) *models.LtCode {
+	return s.dao.NextUsingCode(giftId, codeId)
 }

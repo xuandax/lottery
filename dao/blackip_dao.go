@@ -64,11 +64,11 @@ func (d *BlackipDao) Create(data *models.LtBlackip) error {
 }
 
 //根据IP查询
-func (d *BlackipDao) GetByIp(ip string) []*models.LtBlackip {
+func (d *BlackipDao) GetByIp(ip string) *models.LtBlackip {
 	dataList := make([]*models.LtBlackip, 0)
-	err := d.engine.Where("ip = ?", ip).Desc("ip").Find(&dataList)
+	err := d.engine.Where("ip = ?", ip).Desc("id").Limit(1).Find(&dataList)
 	if err != nil || len(dataList) < 1 {
 		return nil
 	}
-	return dataList
+	return dataList[0]
 }

@@ -77,3 +77,19 @@ func (d *CodeDao) CountByGiftId(giftId int) int64 {
 	}
 	return count
 }
+
+func (d *CodeDao) NextUsingCode(giftId, codeId int) *models.LtCode {
+	dataList := make([]models.LtCode, 0)
+	err := d.engine.
+		Where("gift_id=?", giftId).
+		Where("id>?", codeId).
+		Where("sys_status=?", 0).
+		Asc("id").
+		Find(&dataList)
+	if err != nil || len(dataList) < 1 {
+		return nil
+	} else {
+		return &dataList[0]
+	}
+
+}

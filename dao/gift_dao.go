@@ -2,6 +2,7 @@ package dao
 
 import (
 	"github.com/go-xorm/xorm"
+	"github.com/xuanxiaox/lottery/comm"
 	"github.com/xuanxiaox/lottery/models"
 )
 
@@ -60,4 +61,37 @@ func (d *GiftDao) Update(data *models.LtGift, colums []string) error {
 func (d *GiftDao) Create(data *models.LtGift) error {
 	_, err := d.engine.Insert(data)
 	return err
+}
+
+func (d *GiftDao) GetAllUse() []models.LtGift {
+	now := comm.NowUnix()
+	dataList := make([]models.LtGift, 0)
+	err := d.engine.
+		Where("sys_status=", 0).
+		Where("time_begin>=", now).
+		Where("time_end<", now).
+		Where("time_end<", now).
+		Where("prize_num>", 0).
+		Desc("gtype").
+		Asc("prize_order").
+		Find(&dataList)
+	if err != nil {
+		return []models.LtGift{}
+	}
+	return dataList
+}
+
+func (d *GiftDao) DecrLeftNum(giftId, num int) (int64, error) {
+	row, err := d.engine.Id(giftId).
+		Where("left_num>=?", num).
+		Decr("left_num", num).
+		Update(&models.LtGift{Id: giftId})
+	return row, err
+}
+
+func (d *GiftDao) IncrLeftNum(giftId, num int) (int64, error) {
+	row, err := d.engine.Id(giftId).
+		Incr("left_num", num).
+		Update(&models.LtGift{Id: giftId})
+	return row, err
 }

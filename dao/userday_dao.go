@@ -71,3 +71,9 @@ func (d *UserdayDao) GetByIp(ip string) []*models.LtUserday {
 	}
 	return dataList
 }
+
+func (d *UserdayDao) Search(uid int, day int) []models.LtUserday {
+	userDay := make([]models.LtUserday, 0)
+	_ = d.engine.Where("uid=?", uid).Where("day=?", day).Desc("id").Find(&userDay)
+	return userDay
+}
