@@ -66,18 +66,14 @@ func (d *GiftDao) Create(data *models.LtGift) error {
 func (d *GiftDao) GetAllUse() []models.LtGift {
 	now := comm.NowUnix()
 	dataList := make([]models.LtGift, 0)
-	err := d.engine.
-		Where("sys_status=", 0).
-		Where("time_begin>=", now).
-		Where("time_end<", now).
-		Where("time_end<", now).
-		Where("prize_num>", 0).
+	_ = d.engine.
+		Where("sys_status=?", 0).
+		Where("time_begin<=?", now).
+		Where("time_end>?", now).
+		Where("prize_num>?", 0).
 		Desc("gtype").
 		Asc("prize_order").
 		Find(&dataList)
-	if err != nil {
-		return []models.LtGift{}
-	}
 	return dataList
 }
 

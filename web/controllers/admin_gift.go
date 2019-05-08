@@ -24,7 +24,7 @@ type AdminGiftController struct {
 
 //获取奖品列表
 func (c *AdminGiftController) Get() mvc.Result {
-	dataList := c.ServiceGift.GetAll()
+	dataList := c.ServiceGift.GetAll(true)
 	for i, giftInfo := range dataList {
 		prizeData := make([][2]int, 0)
 		//json反解析
@@ -67,7 +67,7 @@ func (c *AdminGiftController) GetEdit() mvc.Result {
 	id := c.Ctx.URLParamIntDefault("id", 0)
 	giftInfo := viewmodels.ViewGift{}
 	if id > 0 {
-		data := c.ServiceGift.Get(id)
+		data := c.ServiceGift.Get(id, true)
 		giftInfo.Id = data.Id
 		giftInfo.Title = data.Title
 		giftInfo.PrizeNum = data.PrizeNum
@@ -121,7 +121,7 @@ func (c *AdminGiftController) PostSave() mvc.Result {
 	giftInfo.TimeEnd = int(t2.Unix())
 
 	if giftInfo.Id > 0 {
-		dataInfo := c.ServiceGift.Get(giftInfo.Id)
+		dataInfo := c.ServiceGift.Get(giftInfo.Id, true)
 		if dataInfo != nil {
 			giftInfo.SysIp = comm.ClientIP(c.Ctx.Request())
 			giftInfo.SysUpdated = int(time.Now().Unix())

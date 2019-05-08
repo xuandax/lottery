@@ -21,7 +21,7 @@ type IndexController struct {
 //首页
 func (c *IndexController) Get() string {
 	c.Ctx.Header("Content-Type", "text/html")
-	return "欢迎来到抽奖页面 <a href='/public/index.html'>点击抽奖</a>"
+	return "欢迎来到抽奖页面 <a href='/public/page.html'>点击抽奖</a>"
 }
 
 //获取礼物列表
@@ -29,7 +29,7 @@ func (c *IndexController) GetGifts() map[string]interface{} {
 	rs := make(map[string]interface{})
 	rs["code"] = 0
 	rs["msg"] = ""
-	dataList := c.ServiceGift.GetAll()
+	dataList := c.ServiceGift.GetAll(true)
 	list := make([]models.LtGift, 0)
 	for _, data := range dataList {
 		list = append(list, data)
@@ -59,7 +59,7 @@ func (c *IndexController) GetLogin() {
 	}
 	refer := c.Ctx.GetHeader("refer")
 	if refer == "" {
-		refer = "/public/index.html?from=login"
+		refer = "/public/page.html?from=login"
 	}
 	comm.SetLoginuser(c.Ctx.ResponseWriter(), loginUser)
 	comm.Redirect(c.Ctx.ResponseWriter(), refer)

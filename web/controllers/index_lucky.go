@@ -72,7 +72,7 @@ func (c *IndexController) GetLucky() map[string]interface{} {
 	prizeCode := comm.Random(10000)
 	//8 匹配是否中奖
 	giftPrize := c.Prize(prizeCode, limitBlack)
-	if giftPrize != nil || giftPrize.PrizeNum <= 0 || (giftPrize.PrizeNum > 0 && giftPrize.LeftNum <= 0) {
+	if giftPrize == nil || giftPrize.PrizeNum <= 0 || (giftPrize.PrizeNum > 0 && giftPrize.LeftNum <= 0) {
 		rs["code"] = 205
 		rs["msg"] = "很遗憾，没有中奖，请下次再来"
 		return rs
@@ -118,7 +118,7 @@ func (c *IndexController) GetLucky() map[string]interface{} {
 	}
 	//中了实物大奖需要关小黑屋,将用户和IP设置为黑名单一段时间
 	if giftPrize.Gtype == conf.GtypeGiftLarge {
-
+		c.PrizeLarge(loginUser, blackUser, blackIp)
 	}
 	//12 返回抽奖结果
 	rs["gift"] = giftPrize

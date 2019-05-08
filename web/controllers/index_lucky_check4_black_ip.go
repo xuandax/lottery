@@ -12,6 +12,8 @@ func (c *IndexController) CheckBlackIp(ip string) (bool, *models.LtBlackip) {
 	}
 
 	if blackIpInfo.BlackTime > int(time.Now().Unix()) {
-		return true, blackIpInfo
+		return false, blackIpInfo
 	}
+
+	return true, blackIpInfo
 }

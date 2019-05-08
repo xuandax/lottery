@@ -14,8 +14,9 @@ function LuckyDo(wheel, type) {
         },
         success:function(data, msg) {
             console.log(data, " , ", msg)
+            console.log(data.code);
             if (data.code == 0) {
-                wheel.wheelOfFortune('rotate', data.gift.displayorder, type);
+                wheel.wheelOfFortune('rotate', data.gift.prize_order, type);
                 if (data.gift.gdata != "") {
                     wheel["LuckyMsg"] = "恭喜你中奖了：" + data.gift.title
                         + "(" + data.gift.gdata + ")";

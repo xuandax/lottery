@@ -17,7 +17,7 @@ type AdminController struct {
 }
 
 func (c *AdminController) Get() mvc.Result {
-	dataList := c.ServiceGift.Get(1)
+	dataList := c.ServiceGift.Get(1, true)
 	return mvc.View{
 		Name:   "admin/index.html",
 		Layout: "admin/layout",
