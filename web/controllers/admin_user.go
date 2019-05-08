@@ -56,8 +56,9 @@ func (c *AdminUserController) Get() mvc.Result {
 func (c *AdminUserController) GetBlack() mvc.Result {
 	id := c.Ctx.URLParamIntDefault("id", 0)
 	setTime := c.Ctx.URLParamIntDefault("time", 0)
-	data := models.LtUser{Id: id, BlackTime: setTime, SysUpdated: comm.NowUnix()}
-	if id > 0 && setTime > 0 {
+	if id > 0 && setTime >= 0 {
+		setTime = setTime*86400 + comm.NowUnix()
+		data := models.LtUser{Id: id, BlackTime: setTime, SysUpdated: comm.NowUnix()}
 		c.ServiceUser.Update(&data, []string{"black_time", "sys_updated"})
 	}
 	return mvc.Response{

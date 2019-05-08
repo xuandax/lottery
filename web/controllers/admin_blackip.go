@@ -56,11 +56,14 @@ func (c *AdminBlackipController) Get() mvc.Result {
 func (c *AdminBlackipController) GetBlack() mvc.Result {
 	id := c.Ctx.URLParamIntDefault("id", 0)
 	setTime := c.Ctx.URLParamIntDefault("time", 0)
-	data := models.LtBlackip{Id: id, BlackTime: setTime, SysUpdated: comm.NowUnix()}
-	if id > 0 && setTime > 0 {
-		c.ServiceBlackip.Update(&data, []string{"black_time", "sys_updated"})
+	if id > 0 && setTime >= 0 {
+		blackIp := c.ServiceBlackip.Get(id)
+		setTime = setTime*86400 + comm.NowUnix()
+		data := models.LtBlackip{Id: id, Ip: blackIp.Ip, BlackTime: setTime, SysUpdated: comm.NowUnix()}
+		c.ServiceBlackip.Update(&data, []string{"black_time", "SysUpdated"})
+		//c.ServiceBlackip.SetByCache(&data)
 	}
 	return mvc.Response{
-		Path: "/admin/user",
+		Path: "/admin/blackip",
 	}
 }

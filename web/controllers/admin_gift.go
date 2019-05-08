@@ -127,7 +127,7 @@ func (c *AdminGiftController) PostSave() mvc.Result {
 			giftInfo.SysUpdated = int(time.Now().Unix())
 			//奖品总数发生变化
 			if dataInfo.PrizeNum != giftInfo.PrizeNum {
-				giftInfo.LeftNum = giftInfo.LeftNum - (dataInfo.PrizeNum - giftInfo.PrizeNum)
+				giftInfo.LeftNum = dataInfo.LeftNum - dataInfo.PrizeNum - giftInfo.PrizeNum
 				if giftInfo.LeftNum < 0 || giftInfo.PrizeNum <= 0 {
 					giftInfo.LeftNum = 0
 				}

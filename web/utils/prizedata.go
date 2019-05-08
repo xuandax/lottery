@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/xuanxiaox/lottery/comm"
+	"github.com/xuanxiaox/lottery/models"
 	"github.com/xuanxiaox/lottery/services"
 	"log"
 )
@@ -23,14 +24,17 @@ func PrizeCodeDiff(giftId int, service services.CodeService) string {
 
 	//获取抽奖码
 	codeId := 0
-	codeInfo := service.NextUsingCode(giftId, codeId)
-	if codeInfo != nil || codeInfo.Id > 0 {
-		codeInfo.SysStatus = 2
-		codeInfo.SysUpdated = comm.NowUnix()
-		service.Update(codeInfo, nil)
-	} else {
+	codeInfo := &models.LtCode{}
+	codeInfo = service.NextUsingCode(giftId, codeId)
+	if codeInfo == nil {
 		log.Println("prizedata.go PrizeCodeDiff err, gift_id=", giftId)
 		return ""
+	} else if codeInfo != nil {
+		if codeInfo.Id > 0 {
+			codeInfo.SysStatus = 2
+			codeInfo.SysUpdated = comm.NowUnix()
+			service.Update(codeInfo, nil)
+		}
 	}
 	return codeInfo.Code
 }
